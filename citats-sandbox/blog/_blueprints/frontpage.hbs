@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="{{entry.language}}">
+<head>
+    <meta charset="utf-8">
+    <title>{{global.title}}</title>
+</head>
+<body class="frontpage">
+    <header>
+        <h1>{{global.greeting}}</h1>
+    </header>
+    <main>
+        <h2>Tags</h2>
+        <ol class="frontpage__tags">
+        {{#each entry.tags as tag}}
+            <li class="frontpage__tag">{{tag}}</li>
+        {{/#each}}
+        </ol>
+        <h2>Posts</h2>
+        <ol class="frontpage__posts">
+        {{#each entry.recent-posts as post}}
+            <li class="frontpage__post-excerpt">
+                <h3>{{post.title}}</h3>
+                <p>{{post.excerpt}}</p>
+            </li>
+        {{/#each}}
+        </ol>
+    </main>
+</body>
+</html>

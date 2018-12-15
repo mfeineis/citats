@@ -1,0 +1,58 @@
+{
+    "global": {
+        "greeting": "Hi there!",
+        "title": "My Blog"
+    },
+    "sources": {
+        "drafts": [
+            ["read-file", { "glob": "./_drafts/*.md" }],
+            "text"
+        ],
+        "posts": [
+            ["read-file", { "glob": "./_posts/*.md" }],
+            "text",
+            "meta-from-yaml-frontmatter",
+            "meta-from-markdown",
+            ["slug", {
+                "pattern": "blog/${created_at}_${title}"
+            }]
+        ],
+        "tags": [
+            ["read-file", { "glob": "./_posts/*.md" }],
+            "text",
+            "meta-from-yaml-frontmatter",
+            ["flatMap", "tags"],
+            "unique"
+        ]
+    },
+    "streams": {
+        "frontpage-html": {
+            "pipeline": [
+                ["apply", "recent-posts", "tags"],
+                ["hbs-to-html", {
+                    "blueprint": "./_blueprints/frontpage.hbs"
+                }],
+                ["write-file", {
+                    "name": "./index.html"
+                }]
+            ]
+        },
+        "posts-html": {
+            "pipeline": [
+                "posts",
+                ["hbs-to-html", {
+                    "blueprint": "./_blueprints/blog-entry.hbs"
+                }],
+                ["write-file", {
+                    "name": "./${slug}/index.html"
+                }]
+            ]
+        },
+        "recent-posts": {
+            "pipeline": [
+                "posts",
+                "article-excerpt"
+            ]
+        }
+    }
+}
